@@ -31,5 +31,5 @@ app.get('/', (req, res) => {
 const port = process.env.PORT || 3000;
 app.listen(port, function() {
     console.log("Server listening on port " + port);
-    console.log("http://localhost:" + port);
+    console.log(process.env.DOMAIN);
 })

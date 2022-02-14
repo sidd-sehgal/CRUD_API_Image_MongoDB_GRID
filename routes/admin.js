@@ -12,23 +12,26 @@ router.get("/", function (req, res) {
 router.post("/login", upload.none(), function (req, res) {
     const { email, password } = req.body;
 
-    Admin.findOne({ email: email }, (err, result) => {
-        // console.log(result);
-        if (result) {
-            if (result.password === password) {
-                // Success Login
-                const token = jwt.sign({ email },
-                    process.env.PRIVATE_KEY,
-                    { expiresIn: "1h" });
+    if (email && password) {
+        Admin.findOne({ email: email.toLowerCase() }, (err, result) => {
+            // console.log(result);
+            if (result) {
+                if (result.password === password) {
+                    // Success Login
+                    const token = jwt.sign({ email },
+                        process.env.PRIVATE_KEY,
+                        { expiresIn: "2h" });
 
-                res.send("Login Successfully\nJWT Token: " + token)
+                    res.send("Login Successfully\nJWT Token: " + token)
+                } else {
+                    res.send("Incorrect password. Please try again!!")
+                }
             } else {
-                res.send("Incorrect password. Please try again!!")
+                res.send("No Account exist with this email!!")
             }
-        } else {
-            res.send("No Account exist with this email!!")
-        }
-    })
+        })
+    } else res.send("Please Provide Email and Password")
+
 
 });
 
